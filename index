@@ -412,7 +412,7 @@
   <div class="section-label">Panorama general</div>
   <div class="panel" style="margin-bottom:24px;">
     <h3>Composición de cada oficio</h3>
-    <p class="overview-note">Cada barra es un oficio del VRAC; el color muestra qué tipos de expediente contiene. Haz clic en un tipo para ver solo los oficios que lo incluyen; vuelve a hacer clic para ver todos.</p>
+    <p class="overview-note">Cada barra es un oficio del VRAC; el color muestra qué tipos de expediente contiene. Haz clic en un tipo para ver solo esos oficios y solo ese tipo; vuelve a hacer clic para ver la composición completa.</p>
     <div id="overview-legend" class="overview-legend"></div>
   </div>
   <div class="panel oficios-panel" style="margin-bottom:36px;">
@@ -645,16 +645,15 @@ function renderOficiosChart(){
     oficios = oficios.filter(o => (o.tipos[activeTipoFilter] || 0) > 0);
   }
 
-  const datasets = d.tipos.map(tipo => {
+  const tiposToShow = activeTipoFilter ? [activeTipoFilter] : d.tipos;
+  const datasets = tiposToShow.map(tipo => {
     const meta = CAT_META[tipo];
-    const isDimmed = !!activeTipoFilter && tipo !== activeTipoFilter;
     return {
       label: meta.short,
       data: oficios.map(o => o.tipos[tipo] || 0),
-      backgroundColor: isDimmed ? meta.soft : meta.color,
+      backgroundColor: meta.color,
       stack: 'total',
       maxBarThickness: 34,
-      order: tipo === activeTipoFilter ? 0 : 1,
     };
   });
 
